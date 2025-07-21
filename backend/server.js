@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use('/', require('./routes/index'));
 app.use('/api/groups', require('./routes/groups'));
+app.use('/api/expenses', require('./routes/expenses'));
 
 app.listen(PORT,()=>{
     console.log(`server is listening on the port ${PORT}`);
