@@ -1,0 +1,71 @@
+const express = require("express");
+const router = express.Router();
+const { nanoid } = require("nanoid");
+
+const auth = require("../middleware/auth");
+
+const Group = require("../models/group.model");
+const User = require("../models/user.model");
+
+router.post("/", auth, async (req, res) => {
+  const { name } = req.body;
+  const ownerId = req.user.id;
+
+  if (!name) {
+    return res.status(400).json({ msg: "Nmae is required" });
+  }
+
+  try {
+    const newGroup = new Group({
+      name,
+      owner: ownerId,
+      members: [ownerId],
+      joinCode: nanoid(8),
+    });
+
+    const group = await newGroup.save();
+    res.status(201).json(group);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.post('/join',auth,async(req,res)=>{
+    const {joinCode}=req.body;
+
+    const userId=req.user.id;
+    if(!joinCode){
+        res.status(400).json({msg:"Join Code is required"});
+    }
+
+    try{
+        const group= await Group.findOne({joinCode});
+        if(!group){
+            return res.status(404).json({msg:"Invalid Code"});
+        }
+        if(group.members.includes(userId)){
+            return res.status(400).json({msg:"you're already member of this group"});
+        }
+        group.members.push(userId);
+        await group.save();
+
+        res.json(group);
+
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+router.get('/',async (req,res)=>{
+    try{
+        const groups=await Group.find({members:req.user.id}.sort({createdAt:-1}));
+        res.json(groups);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+})
+
+module.exports=router;
