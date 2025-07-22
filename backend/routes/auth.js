@@ -5,6 +5,17 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const User = require("../models/user.model");
 
+
+router.get('/',auth,async(req,res)=>{
+  try{
+    const user=await User.findById(req.user.id).select('-password');
+    res.json(user);
+  }catch{
+    console.error(err.message);
+    res.status(500).json({msg:"server error"});
+  }
+})
+
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
