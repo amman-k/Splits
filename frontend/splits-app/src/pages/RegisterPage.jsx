@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -7,11 +8,12 @@ const RegisterPage = () => {
     email: '',
     password: '',
   });
-
- 
   const navigate = useNavigate();
-
   const { username, email, password } = formData;
+  const {register}=useContext(AuthContext);
+
+  const [error,setError]=useState('');
+  const [loading,setLoading]=useState(false);
 
  
   const onChange = (e) => {
@@ -21,12 +23,18 @@ const RegisterPage = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log('Register form submitted', formData);
-    // --- TODO: API call to /api/auth/register will go here ---
-    // On success:
-    // 1. Save the token to localStorage
-    // 2. Navigate to the dashboard
-    // navigate('/dashboard');
+    setLoading(true);
+    setError('');
+
+    const result=await register(username,email,password);
+    setLoading(false);
+
+    if(result.success){
+      navigate('./dashboard');
+    }else{
+      setError(result.message);
+    }
+
   };
 
   return (
