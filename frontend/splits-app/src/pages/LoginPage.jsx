@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -9,10 +10,12 @@ const LoginPage = () => {
 
   // Used to redirect the user after a successful login
   const navigate = useNavigate();
+  const {login}=useContext(AuthContext);
 
   const { email, password } = formData;
+  const [error,setError]=useState('');
+  const [loading,setLoading]=useState(false);
 
-  // Update state when user types in the input fields
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -20,12 +23,17 @@ const LoginPage = () => {
   // Handle form submission
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login form submitted', formData);
-    // --- TODO: API call to /api/auth/login will go here ---
-    // On success:
-    // 1. Save the token to localStorage
-    // 2. Navigate to the dashboard
-    // navigate('/dashboard');
+    setLoading(true);
+    setError('');
+
+    const result=await login(email,password);
+
+    setLoading(false);
+    if(result.success){
+        navigate('./dashboard');
+    }else{
+        setError(result.message);
+    }
   };
 
   return (
