@@ -3,23 +3,34 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
+const setAuthToken = (token) => {
+  if (token) {
+    axios.defaults.headers.common["x-auth-token"] = token;
+  } else {
+    delete axios.defaults.headers.common["x-auth-token"];
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const register = async (username,email,password)=>{
+  const register = async (username, email, password) => {
     try {
-        const res =axios.post('/api/auth/register',{username,email,password});
-        localStorage.setItem('token',(await res).data.token);
+      const res = axios.post("/api/auth/register", {
+        username,
+        email,
+        password,
+      });
+      localStorage.setItem("token", (await res).data.token);
 
-        setUser({email});
-        return {sucess:true};
-
-    }catch(err){
-        console.error('Registration error',err.message);
-        return {success:fail,message:err.message};
+      setUser({ email });
+      return { sucess: true };
+    } catch (err) {
+      console.error("Registration error", err.message);
+      return { success: fail, message: err.message };
     }
-  }
+  };
 
   const login = async (email, password) => {
     try {
