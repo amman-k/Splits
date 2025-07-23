@@ -1,40 +1,44 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const auth = require("../middleware/auth");
-const { isGroupOwner } = require("../middleware/groups");
+const auth = require('../middleware/auth');
+const { isGroupOwner } = require('../middleware/groups');
 
-const Expense = require("../models/expense.model");
-const Group = require("../models/group.model");
-const User = require("../models/user.model");
 
-router.post("/", auth, async (req, res) => {
+const Expense = require('../models/expense.model');
+const Group = require('../models/group.model');
+const User = require('../models/user.model');
+
+router.post('/', auth, async (req, res) => {
   const { description, amount, groupId, splitAmong } = req.body;
   const paidById = req.user.id;
   if (!description || !amount || !groupId) {
-    return res
-      .status(400)
-      .json({ msg: "Please provide description, amount, and group ID" });
+    return res.status(400).json({ msg: 'Please provide description, amount, and group ID' });
   }
   try {
     const group = await Group.findById(groupId);
     if (!group) {
-      return res.status(404).json({ msg: "Group not found" });
+      return res.status(404).json({ msg: 'Group not found' });
     }
-    const newExpense = Expense({
+
+    if (!group.members.includes(paidById)) {
+        return res.status(403).json({ msg: 'You are not a member of this group' });
+    }
+
+    const newExpense = new Expense({
       description,
       amount,
       group: groupId,
-      paidById: paidById,
+      paidBy: paidById,
       splitAmong,
-      status: group.owner.id === paidById ? "approved" : "pending",
+      status: group.owner.toString() === paidById ? 'approved' : 'pending',
     });
 
     const expense = await newExpense.save();
     res.status(201).json(expense);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 
@@ -75,5 +79,6 @@ router.put('/:id/reject', [auth, isGroupOwner], async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
 
 module.exports = router;
