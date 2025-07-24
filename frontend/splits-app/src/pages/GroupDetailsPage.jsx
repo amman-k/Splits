@@ -5,6 +5,7 @@ import Navbar from '../components/layout/Navbar';
 import AuthContext from '../context/AuthContext';
 import ExpenseList from '../components/group/ExpenseList';
 import AddExpenseForm from '../components/group/AddExpenseForm';
+import BalanceSummary from '../components/group/BalanceSummary';
 
 const GroupDetailPage = () => {
   const { id } = useParams();
@@ -37,8 +38,8 @@ const GroupDetailPage = () => {
   }, [id]);
 
   const handleExpenseAdded = () => {
-    setIsAddingExpense(false); // Hide form
-    fetchGroupDetails(); // Refresh data
+    setIsAddingExpense(false);
+    fetchGroupDetails();
   };
 
   const handleApprove = async (expenseId) => {
@@ -59,7 +60,7 @@ const GroupDetailPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !user) { // Also wait for user context to be loaded
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <Navbar />
@@ -128,7 +129,11 @@ const GroupDetailPage = () => {
               </ul>
               <hr className="my-6 border-gray-700" />
               <h2 className="text-2xl font-bold mb-4">Balances</h2>
-              <div className="text-gray-400">Balance calculations will be shown here.</div>
+              <BalanceSummary 
+                expenses={expenses}
+                members={group.members}
+                currentUserId={user._id}
+              />
             </div>
           </div>
         </div>
