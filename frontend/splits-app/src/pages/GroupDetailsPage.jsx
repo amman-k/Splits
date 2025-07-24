@@ -1,36 +1,65 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useParams,Link } from 'react-router-dom'
-import AuthContext from '../context/AuthContext';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from '../components/layouts/Navbar';
-import ExpenseList from '../components/groups/ExpenseList';
+import Navbar from '../components/layout/Navbar';
+import AuthContext from '../context/AuthContext';
+import ExpenseList from '../components/group/ExpenseList';
+import AddExpenseForm from '../components/group/AddExpenseForm';
 
-const GroupDetailsPage = () => {
-  const {id}=useParams();
-  const user=useContext(AuthContext);
-  const [group,setGroup]=useState(null);
-  const [expense,setExpense]=useState([]);
-  const [loading,setLoading]=useState(false);
-  const [error,setError]=useState('');
+const GroupDetailPage = () => {
+  const { id } = useParams();
+  const { user } = useContext(AuthContext);
 
-  useEffect(()=>{
-    const fetchGroupDetails= async ()=>{
-      try{
-        const [groupRes,expenseRes]=await Promise.all([axios.post(`/api/groups/${id}`),axios.post(`api/expenses/group/${id}`)]);
+  const [group, setGroup] = useState(null);
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isAddingExpense, setIsAddingExpense] = useState(false);
 
-        setGroup(groupRes.data);
-        setExpense(expenseRes.data);
-      }catch(err){
-        setError('Could not fetch group details.');
-        console.error(err);
-      }finally {
-        setLoading(false);
-      }
+  const fetchGroupDetails = async () => {
+    try {
+      const [groupRes, expensesRes] = await Promise.all([
+        axios.get(`/api/groups/${id}`),
+        axios.get(`/api/expenses/group/${id}`)
+      ]);
+      setGroup(groupRes.data);
+      setExpenses(expensesRes.data);
+    } catch (err) {
+      setError('Could not fetch group details.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    fetchGroupDetails();
-  },[id]);
+  };
 
-  if(loading){
+  useEffect(() => {
+    fetchGroupDetails();
+  }, [id]);
+
+  const handleExpenseAdded = () => {
+    setIsAddingExpense(false); // Hide form
+    fetchGroupDetails(); // Refresh data
+  };
+
+  const handleApprove = async (expenseId) => {
+    try {
+      await axios.put(`/api/expenses/${expenseId}/approve`);
+      fetchGroupDetails();
+    } catch (err) {
+      console.error('Failed to approve expense', err);
+    }
+  };
+
+  const handleReject = async (expenseId) => {
+    try {
+      await axios.put(`/api/expenses/${expenseId}/reject`);
+      fetchGroupDetails();
+    } catch (err) {
+      console.error('Failed to reject expense', err);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <Navbar />
@@ -38,6 +67,7 @@ const GroupDetailsPage = () => {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
@@ -47,8 +77,8 @@ const GroupDetailsPage = () => {
     );
   }
 
-   return (
-   <div className="min-h-screen bg-gray-900 text-white">
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
       <Navbar />
       <main>
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -60,10 +90,26 @@ const GroupDetailsPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-md">
-              {/* --- TODO: Add Expense Form will go here --- */}
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold mb-4">Expenses</h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Expenses</h2>
+                {!isAddingExpense && (
+                  <button 
+                    onClick={() => setIsAddingExpense(true)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700"
+                  >
+                    Add Expense
+                  </button>
+                )}
               </div>
+
+              {isAddingExpense && (
+                <AddExpenseForm 
+                  groupId={id}
+                  onExpenseAdded={handleExpenseAdded}
+                  onCancel={() => setIsAddingExpense(false)}
+                />
+              )}
+
               <ExpenseList 
                 expenses={expenses}
                 groupOwnerId={group.owner._id}
@@ -89,7 +135,6 @@ const GroupDetailsPage = () => {
       </main>
     </div>
   );
+};
 
-}
-
-export default GroupDetailsPage
+export default GroupDetailPage;
