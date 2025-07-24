@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
-import Navbar from '../components/layouts/Navbar';
+import React, { useState } from 'react';
+import Navbar from '../components/layout/Navbar';
 import GroupList from '../components/dashboard/GroupList';
 import CreateGroupModal from '../components/dashboard/CreateGroupModal';
-const DashboardPage = () => {
-  const [isCreateModalOpen,setCreateModalOpen]=useState(false);
-  const [isJoinModalOpen,setJoinModalOpen]=useState(false);
-  const [groupListKey,setGroupListKey]=useState(Date.now());
+import JoinGroupModal from '../components/dashboard/JoinGroupModal';
 
-  const handleGroupCreated =()=>{
+const DashboardPage = () => {
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
+  const [groupListKey, setGroupListKey] = useState(Date.now());
+
+  const handleGroupChange = () => {
+    // When a group is created or joined, update the key to trigger a re-fetch in GroupList
     setGroupListKey(Date.now());
   };
 
   return (
-     <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-900 text-white">
       <Navbar />
       <main>
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -46,13 +49,19 @@ const DashboardPage = () => {
       {isCreateModalOpen && (
         <CreateGroupModal 
           onClose={() => setCreateModalOpen(false)} 
-          onGroupCreated={handleGroupCreated}
+          onGroupCreated={handleGroupChange}
         />
       )}
       
-      {/* {isJoinModalOpen && <JoinGroupModal onClose={() => setJoinModalOpen(false)} />} */}
+      {/* Render the modal for joining a group */}
+      {isJoinModalOpen && (
+        <JoinGroupModal 
+          onClose={() => setJoinModalOpen(false)}
+          onGroupJoined={handleGroupChange}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;
