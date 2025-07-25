@@ -58,7 +58,7 @@ const AddExpenseForm = ({ groupId, onExpenseAdded, onCancel }) => {
         </div>
         <div className="mb-4">
           <label htmlFor="amount" className="block text-sm font-medium text-gray-300 mb-1">
-            Amount ($)
+            Amount (Rs.)
           </label>
           <input
             type="number"
