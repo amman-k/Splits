@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from '../components/layout/Navbar';
+import Navbar from '../components/layouts/Navbar';
 import AuthContext from '../context/AuthContext';
-import ExpenseList from '../components/group/ExpenseList';
-import AddExpenseForm from '../components/group/AddExpenseForm';
-import BalanceSummary from '../components/group/BalanceSummary';
+import ExpenseList from '../components/groups/ExpenseList';
+import AddExpenseForm from '../components/groups/AddExpenseForm';
+import BalanceSummary from '../components/groups/BalanceSummary';
 
 const GroupDetailPage = () => {
   const { id } = useParams();
