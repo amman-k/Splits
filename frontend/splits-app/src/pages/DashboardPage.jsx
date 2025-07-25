@@ -21,7 +21,7 @@ const DashboardPage = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white font-sans">
       <Navbar />
-      <header className="bg-gray-800 shadow">
+      <header className="">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-white">Dashboard</h1>
         </div>
