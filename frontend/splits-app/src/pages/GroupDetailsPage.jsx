@@ -90,13 +90,13 @@ const GroupDetailPage = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-md">
+            <div className="lg:col-span-2 bg-gray-800 p-6 rounded-4xl shadow-md">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Expenses</h2>
                 {!isAddingExpense && (
                   <button 
                     onClick={() => setIsAddingExpense(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-4xl font-semibold hover:bg-blue-700"
                   >
                     Add Expense
                   </button>
@@ -120,7 +120,7 @@ const GroupDetailPage = () => {
               />
             </div>
 
-            <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+            <div className="bg-gray-800 p-6 rounded-4xl shadow-md">
               <h2 className="text-2xl font-bold mb-4">Members</h2>
               <ul className="space-y-2">
                 {group.members.map(member => (
