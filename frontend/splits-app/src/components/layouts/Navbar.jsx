@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // 1. Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
+import styles from './Navbar.module.css';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate(); // 2. Initialize the navigate function
+  const navigate = useNavigate();
 
   const onLogout = () => {
-    logout(); // This clears the user's token and state
-    navigate('/login', { replace: true }); // 3. Navigate to the login page
+    logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -24,15 +26,18 @@ const Navbar = () => {
           </div>
 
           {/* User Info and Logout */}
-          <div className="flex items-center">
-            <span className="text-gray-300 mr-4">
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-300 hidden sm:block">
               Welcome, {user ? user.username : 'Guest'}
             </span>
-            <button
-              onClick={onLogout}
-              className="bg-red-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
-            >
-              Logout
+            {/* New Animated Logout Button */}
+            <button onClick={onLogout} className={styles.btn}>
+              <div className={styles.sign}>
+                <FaSignOutAlt />
+              </div>
+              <div className={styles.text}>
+                Logout
+              </div>
             </button>
           </div>
         </div>
