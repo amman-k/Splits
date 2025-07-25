@@ -34,7 +34,7 @@ const AddExpenseForm = ({ groupId, onExpenseAdded, onCancel }) => {
     }
   };
   return (
-    <div className="bg-gray-700 p-6 rounded-lg mb-6">
+    <div className="bg-gray-700 p-6 rounded-2xl mb-6">
       <h3 className="text-xl font-semibold text-white mb-4">Add a New Expense</h3>
       <form onSubmit={handleSubmit}>
         {error && (
@@ -76,14 +76,14 @@ const AddExpenseForm = ({ groupId, onExpenseAdded, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-md text-gray-300 bg-gray-500 hover:bg-gray-400"
+            className="px-4 py-2 rounded-xl text-gray-300 bg-gray-500 hover:bg-gray-400"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800"
+            className="px-4 py-2 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800"
           >
             {loading ? 'Adding...' : 'Add Expense'}
           </button>

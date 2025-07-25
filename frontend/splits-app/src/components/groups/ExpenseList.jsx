@@ -28,7 +28,7 @@ const ExpenseList = ({
           <h3 className="text-xl font-semibold text-yellow-400 mb-4">Pending Approval</h3>
           <ul className="space-y-3">
             {pendingExpenses.map(expense => (
-              <li key={expense._id} className="bg-gray-700 p-4 rounded-lg flex justify-between items-center flex-wrap gap-4">
+              <li key={expense._id} className="bg-gray-700 p-4 rounded-2xl flex justify-between items-center flex-wrap gap-4">
                 <div>
                   <p className="font-semibold text-white">{expense.description}</p>
                   <p className="text-sm text-gray-400">
@@ -39,12 +39,12 @@ const ExpenseList = ({
                   <span className="text-lg font-bold text-white">Rs. {expense.amount.toFixed(2)}</span>
                   <button 
                     onClick={() => onApprove(expense._id)}
-                    className="bg-green-600 text-white px-3 py-1 rounded-md text-sm font-semibold hover:bg-green-700 transition-colors">
+                    className="bg-green-600 text-white px-3 py-1 rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors">
                     Approve
                   </button>
                   <button 
                     onClick={() => onReject(expense._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded-md text-sm font-semibold hover:bg-red-700 transition-colors">
+                    className="bg-red-600 text-white px-3 py-1 rounded-xl text-sm font-semibold hover:bg-red-700 transition-colors">
                     Reject
                   </button>
                 </div>
@@ -60,7 +60,7 @@ const ExpenseList = ({
         {approvedExpenses.length > 0 ? (
           <ul className="space-y-3">
             {approvedExpenses.map(expense => (
-              <li key={expense._id} className="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+              <li key={expense._id} className="bg-gray-700 p-4 rounded-2xl flex justify-between items-center">
                 <div>
                   <p className="font-semibold text-white">{expense.description}</p>
                   <p className="text-sm text-gray-400">Paid by {expense.paidBy.username}</p>
