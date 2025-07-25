@@ -13,32 +13,37 @@ const setAuthToken = (token) => {
   }
 };
 
-// Create the provider component
+// The main provider component.
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Centralized function to load user data
   const loadUser = async () => {
+    try {
+      const res = await axios.get('/api/auth');
+      setUser(res.data);
+    } catch (err) {
+      console.error('Failed to load user', err);
+      localStorage.removeItem('token');
+      setAuthToken(null);
+      setUser(null);
+    } finally {
+      if (loading) {
+        setLoading(false);
+      }
+    }
+  };
+  
+  // Load user on initial app render if a token is present
+  useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setAuthToken(token);
-      try {
-        const res = await axios.get('/api/auth');
-        setUser(res.data);
-      } catch (err) {
-        console.error('Failed to load user', err);
-        // If token is invalid, remove it
-        localStorage.removeItem('token');
-        setUser(null);
-      }
+      loadUser();
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
-  };
-
-  // Load user on initial app render
-  useEffect(() => {
-    loadUser();
   }, []);
 
   // Function to handle user registration
@@ -46,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axios.post('/api/auth/register', { username, email, password });
       localStorage.setItem('token', res.data.token);
-      // After getting the token, call loadUser to fetch data
+      setAuthToken(res.data.token);
       await loadUser(); 
       return { success: true };
     } catch (err) {
@@ -61,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axios.post('/api/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
-      // After getting the token, call loadUser to fetch data
+      setAuthToken(res.data.token);
       await loadUser();
       return { success: true };
     } catch (err) {
@@ -71,23 +76,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Function to handle user logout
+  // Function to handle user logout - it now only handles state
   const logout = () => {
     localStorage.removeItem('token');
     setAuthToken(null);
     setUser(null);
   };
 
-  // The value provided to consuming components
-  const value = {
-    user,
-    register,
-    login,
-    logout,
-    loading,
-  };
+  const value = { user, register, login, logout, loading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
 export default AuthContext;
