@@ -1,14 +1,14 @@
-import React, { useContext } from "react";
-import AuthContext from "../../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // 1. Import useNavigate
+import AuthContext from '../../context/AuthContext';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // 2. Initialize the navigate function
 
   const onLogout = () => {
-    logout();
-    navigate("./login");
+    logout(); // This clears the user's token and state
+    navigate('/login', { replace: true }); // 3. Navigate to the login page
   };
 
   return (
@@ -26,7 +26,7 @@ const Navbar = () => {
           {/* User Info and Logout */}
           <div className="flex items-center">
             <span className="text-gray-300 mr-4">
-              Welcome, {user ? user.username : "Guest"}
+              Welcome, {user ? user.username : 'Guest'}
             </span>
             <button
               onClick={onLogout}
