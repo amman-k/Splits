@@ -36,7 +36,7 @@ const ExpenseList = ({
                   </p>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span className="text-lg font-bold text-white">${expense.amount.toFixed(2)}</span>
+                  <span className="text-lg font-bold text-white">Rs. {expense.amount.toFixed(2)}</span>
                   <button 
                     onClick={() => onApprove(expense._id)}
                     className="bg-green-600 text-white px-3 py-1 rounded-md text-sm font-semibold hover:bg-green-700 transition-colors">
@@ -65,7 +65,7 @@ const ExpenseList = ({
                   <p className="font-semibold text-white">{expense.description}</p>
                   <p className="text-sm text-gray-400">Paid by {expense.paidBy.username}</p>
                 </div>
-                <span className="text-lg font-bold text-white">${expense.amount.toFixed(2)}</span>
+                <span className="text-lg font-bold text-white">Rs. {expense.amount.toFixed(2)}</span>
               </li>
             ))}
           </ul>
