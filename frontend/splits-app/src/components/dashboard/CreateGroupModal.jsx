@@ -16,10 +16,10 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     setError('');
 
     try {
-      // Use the 'api' instance and the correct path
+      
       const res = await axios.post('/api/groups', { name });
-      onGroupCreated(res.data); // Pass the new group back to the dashboard
-      onClose(); // Close the modal on success
+      onGroupCreated(res.data); 
+      onClose(); 
     } catch (err) {
       const message = err.response?.data?.msg || 'Failed to create group.';
       setError(message);
@@ -30,15 +30,15 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
   };
 
   return (
-    // Modal Overlay
+
     <div 
       className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
-      onClick={onClose} // Close modal when clicking on the overlay
+      onClick={onClose} 
     >
       {/* Modal Content */}
       <div 
-        className="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md border border-gray-700"
-        onClick={e => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        className="bg-gray-800 rounded-4xl shadow-2xl p-8 w-full max-w-md border border-gray-700"
+        onClick={e => e.stopPropagation()} 
       >
         <h2 className="text-2xl font-bold text-white mb-6">Create a New Group</h2>
         
@@ -67,14 +67,14 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 rounded-lg text-gray-300 bg-gray-600 hover:bg-gray-500 transition-colors"
+              className="px-6 py-2 rounded-xl text-gray-300 bg-gray-600 hover:bg-gray-500 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 transition-colors"
+              className="px-6 py-2 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 transition-colors"
             >
               {loading ? 'Creating...' : 'Create'}
             </button>
