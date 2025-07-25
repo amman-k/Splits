@@ -30,7 +30,7 @@ const RegisterPage = () => {
     setLoading(false);
 
     if(result.success){
-      navigate('./dashboard');
+     navigate('/dashboard', { replace: true }); 
     }else{
       setError(result.message);
     }
