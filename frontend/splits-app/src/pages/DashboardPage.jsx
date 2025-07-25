@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Navbar from '../components/layout/Navbar';
-import GroupList from '../components/dashboard/GroupList';
+import Navbar from '../components/layouts/Navbar';
+import GroupList from '../components/dashboard/GroupLists';
 import CreateGroupModal from '../components/dashboard/CreateGroupModal';
 import JoinGroupModal from '../components/dashboard/JoinGroupModal';
 
