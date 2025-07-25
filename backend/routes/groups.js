@@ -71,25 +71,25 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.get("/id:", auth, async (req, res) => {
-  try {
-    const group = await Group.findById(req.params.id)
-      .populate("owner", "username")
-      .populate("members", "username");
+router.get('/:id', auth, async (req, res) => {
+    try {
+        const group = await Group.findById(req.params.id)
+            .populate('owner', 'username')
+            .populate('members', 'username');
 
-    if (!group) {
-      return res.status(404).json({ msg: "group not found" });
-    }
-    if (!group.members.some((member) => member._id.equals(req.user.id)));
-    {
-      return res.status(403).json({ msg: "Unautorized access" });
-    }
+        if (!group) {
+            return res.status(404).json({ msg: 'Group not found' });
+        }
 
-    res.json(group);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+        if (!group.members.some(member => member._id.toString() === req.user.id)) {
+            return res.status(403).json({ msg: 'User not authorized to view this group' });
+        }
+
+        res.json(group);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
 });
 
 module.exports = router;
