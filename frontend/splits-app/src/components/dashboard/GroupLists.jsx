@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const GroupLists = () => {
+const GroupList = () => {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const res = await axios.get("/api/groups");
+        // Use the 'api' instance and the correct path
+        const res = await axios.get('/api/groups');
         setGroups(res.data);
       } catch (err) {
-        setError("Could not fetch groups.");
+        setError('Could not fetch groups.');
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchGroups();
-  },[]);
 
-  if(loading){
+    fetchGroups();
+  }, []);
+
+  if (loading) {
     return <p className="text-gray-400">Loading groups...</p>;
   }
-  if (error){
+
+  if (error) {
     return <p className="text-red-400">{error}</p>;
   }
 
@@ -53,4 +56,4 @@ const GroupLists = () => {
   );
 };
 
-export default GroupLists;
+export default GroupList;
